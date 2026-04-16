@@ -18,7 +18,7 @@ const Navbar = () => {
       </div>
 
     
-      <div className="hidden md:flex gap-2">
+      <div className="hidden md:flex p-2 gap-5">
         {navItems.map((item, index) => (
           <MyLinks key={index} href={item.path}>
             {item.text}
@@ -33,7 +33,7 @@ const Navbar = () => {
             ☰
           </label>
 
-          <ul className="menu menu-sm dropdown-content mt-3 z-10 p-2  shadow bg-base-100 rounded-box w-40">
+          <ul className=" menu menu-sm dropdown-content mt-3 z-10 p-2 gap-3  shadow bg-base-100 rounded-box w-40">
             {navItems.map((item, index) => (
               <li key={index}>
                 <MyLinks href={item.path}>{item.text}</MyLinks>
