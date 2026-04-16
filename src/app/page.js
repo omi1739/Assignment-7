@@ -1,7 +1,16 @@
-import Image from "next/image";
+import Banner from "@/components/homepage/Banner";
+
 
 export default function Home() {
   return (
-    <h2 className="text-3xl">Hello OMIBOSS</h2>
+    <div>
+
+       <section>
+        <Banner></Banner>
+
+       </section>
+
+    </div>
+    
   );
 }
