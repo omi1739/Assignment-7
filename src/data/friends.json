@@ -7,6 +7,7 @@
     "days_since_contact": 20,
     "status": "overdue",
     "tags": ["school", "close friend"],
+    "relation": "family",
     "bio": "We studied together in high school. Still share cricket updates and life talks.",
     "goal": 14,
     "next_due_date": "2026-03-25"
@@ -19,6 +20,7 @@
     "days_since_contact": 11,
     "status": "almost due",
     "tags": ["university", "group project"],
+    "relation": "work",
     "bio": "Worked on several university assignments together. Always dependable in group work.",
     "goal": 14,
     "next_due_date": "2026-04-19"
@@ -31,6 +33,7 @@
     "days_since_contact": 5,
     "status": "on-track",
     "tags": ["developer", "tech buddy"],
+    "relation": "work",
     "bio": "Met through a programming meetup. We often discuss coding problems and side projects.",
     "goal": 14,
     "next_due_date": "2026-04-25"
@@ -43,6 +46,7 @@
     "days_since_contact": 13,
     "status": "almost due",
     "tags": ["gym", "fitness"],
+    "relation": "family",
     "bio": "Gym partner who keeps me motivated. We track workouts and diet together.",
     "goal": 14,
     "next_due_date": "2026-04-18"
@@ -55,6 +59,7 @@
     "days_since_contact": 18,
     "status": "overdue",
     "tags": ["startup", "business"],
+    "relation": "work",
     "bio": "Met at a startup event. We exchange ideas about business and tech trends.",
     "goal": 14,
     "next_due_date": "2026-04-01"
@@ -67,6 +72,7 @@
     "days_since_contact": 4,
     "status": "on-track",
     "tags": ["neighbor"],
+    "relation": "family",
     "bio": "Lives nearby. We often catch up during evening walks and tea.",
     "goal": 7,
     "next_due_date": "2026-04-23"
@@ -79,6 +85,7 @@
     "days_since_contact": 16,
     "status": "overdue",
     "tags": ["family friend"],
+    "relation": "family",
     "bio": "Family friend since childhood. We meet during festivals and special occasions.",
     "goal": 10,
     "next_due_date": "2026-04-05"
@@ -91,8 +98,35 @@
     "days_since_contact": 6,
     "status": "on-track",
     "tags": ["creative", "design"],
+    "relation": "work",
     "bio": "A creative friend who loves UI/UX design. We share ideas and critique each other's work.",
     "goal": 14,
     "next_due_date": "2026-04-24"
+  },
+  {
+    "id": 9,
+    "name": "Nafis Islam",
+    "picture": "https://randomuser.me/api/portraits/men/45.jpg",
+    "email": "nafis.islam@gmail.com",
+    "days_since_contact": 9,
+    "status": "almost due",
+    "tags": ["college"],
+    "relation": "family",
+    "bio": "College friend. We reconnect occasionally over tea and long chats.",
+    "goal": 14,
+    "next_due_date": "2026-04-20"
+  },
+  {
+    "id": 10,
+    "name": "Zubair Hossain",
+    "picture": "https://randomuser.me/api/portraits/men/29.jpg",
+    "email": "zubair.hossain@gmail.com",
+    "days_since_contact": 2,
+    "status": "on-track",
+    "tags": ["office"],
+    "relation": "work",
+    "bio": "Office colleague. We collaborate on tasks and sometimes hang out after work.",
+    "goal": 7,
+    "next_due_date": "2026-04-26"
   }
 ]
