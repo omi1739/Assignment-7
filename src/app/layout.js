@@ -33,10 +33,10 @@ export default function RootLayout({ children }) {
           <ClientWrapper>
             {children}
           </ClientWrapper>
-         
+
         </main>
-        <Footer/>
-        </body>
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -15,11 +15,11 @@ const TimelinePage = () => {
   const getInteractionIcon = (type) => {
     switch (type) {
       case "call":
-        return <FaPhone className="text-blue-600" />;
+        return <FaPhone className="text-blue-800" />;
       case "text":
-        return <MdMessage className="text-green-600" />;
+        return <MdMessage className="text-green-900" />;
       case "video":
-        return <HiVideoCamera className="text-purple-600" />;
+        return <HiVideoCamera className="text-purple-800" />;
       default:
         return null;
     }
@@ -38,10 +38,10 @@ const TimelinePage = () => {
     }
   };
 
-  // Filter interactions based on selected filter
+  
   const filteredInteractions = getFilteredInteractions(filter);
 
-  // Get count of each interaction type
+  
   const getCounts = () => {
     return {
       all: interactions.length,
@@ -66,43 +66,10 @@ const TimelinePage = () => {
     <div className="w-[90%] mx-auto py-10 min-h-screen">
       <h1 className="text-4xl font-bold mb-8">Timeline</h1>
 
-      {/* Filter Timeline Section */}
+    
       <div className="bg-white shadow rounded-xl p-6 mb-8">
         <h3 className="font-semibold text-lg mb-4">Filter Timeline</h3>
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => setFilter("all")}
-            className={`btn ${
-              filter === "all" ? "btn-primary" : "btn-outline"
-            }`}
-          >
-            All ({counts.all})
-          </button>
-          <button
-            onClick={() => setFilter("call")}
-            className={`btn ${
-              filter === "call" ? "btn-primary" : "btn-outline"
-            }`}
-          >
-            <FaPhone /> Call ({counts.call})
-          </button>
-          <button
-            onClick={() => setFilter("text")}
-            className={`btn ${
-              filter === "text" ? "btn-primary" : "btn-outline"
-            }`}
-          >
-            <MdMessage /> Text ({counts.text})
-          </button>
-          <button
-            onClick={() => setFilter("video")}
-            className={`btn ${
-              filter === "video" ? "btn-primary" : "btn-outline"
-            }`}
-          >
-            <HiVideoCamera /> Video ({counts.video})
-          </button>
-        </div>
+            <input type="text" placeholder="Filter timeline" className="border rounded-2xl"/>
       </div>
 
       {filteredInteractions.length === 0 ? (
@@ -117,17 +84,17 @@ const TimelinePage = () => {
           {filteredInteractions.map((interaction) => (
             <div
               key={interaction.id}
-              className="bg-white border-2 border-dashed border-blue-400 rounded-lg p-4 hover:shadow-md transition-shadow"
+              className="bg-white border-2 bg-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-4">
-                {/* Icon */}
+                
                 <div className="shrink-0 mt-1">
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                     {getInteractionIcon(interaction.type)}
                   </div>
                 </div>
 
-                {/* Content */}
+               
                 <div className="grow">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-semibold text-lg">

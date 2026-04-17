@@ -64,7 +64,7 @@ const FriendDetailsPage = ({ params }) => {
 
     // Update local state
     setInteractions((prev) => [newInteraction, ...prev]);
-    
+
     // Add to global context (no localStorage)
     addToContext(newInteraction);
   };
@@ -208,6 +208,6 @@ const FriendDetailsPage = ({ params }) => {
       </div>
     </div>
   );
-}
+};
 
 export default FriendDetailsPage;

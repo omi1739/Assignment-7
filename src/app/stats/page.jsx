@@ -110,8 +110,6 @@ const StatsPage = () => {
     <div className="w-[90%] mx-auto py-10 min-h-screen">
       <h1 className="text-4xl font-bold mb-8">Friendship Analytics</h1>
 
-     
-
       {/* Pie Chart Section */}
       {chartData.length > 0 && (
         <div className="bg-white shadow rounded-xl p-8 mb-8">
