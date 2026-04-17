@@ -4,29 +4,13 @@ import { useState, useEffect } from "react";
 import { FaPhone } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
 import { HiVideoCamera } from "react-icons/hi";
+import { useInteractions } from "@/context/InteractionsContext";
 
 const TimelinePage = () => {
-  const [interactions, setInteractions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("all");
-
-  useEffect(() => {
-    // Load interactions from localStorage
-    const storedInteractions = localStorage.getItem("friendInteractions");
-    if (storedInteractions) {
-      try {
-        const parsed = JSON.parse(storedInteractions);
-        // Sort by timestamp (newest first)
-        const sorted = parsed.sort(
-          (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
-        );
-        setInteractions(sorted);
-      } catch (error) {
-        console.error("Error parsing interactions:", error);
-      }
-    }
-    setLoading(false);
-  }, []);
+  const { getInteractions, getFilteredInteractions } = useInteractions();
+  const interactions = getInteractions();
 
   const getInteractionIcon = (type) => {
     switch (type) {
@@ -55,10 +39,7 @@ const TimelinePage = () => {
   };
 
   // Filter interactions based on selected filter
-  const filteredInteractions =
-    filter === "all"
-      ? interactions
-      : interactions.filter((interaction) => interaction.type === filter);
+  const filteredInteractions = getFilteredInteractions(filter);
 
   // Get count of each interaction type
   const getCounts = () => {
@@ -140,14 +121,14 @@ const TimelinePage = () => {
             >
               <div className="flex items-start gap-4">
                 {/* Icon */}
-                <div className="flex-shrink-0 mt-1">
+                <div className="shrink-0 mt-1">
                   <div className="flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full">
                     {getInteractionIcon(interaction.type)}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-grow">
+                <div className="grow">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-semibold text-lg">
                       {getInteractionLabel(interaction.type)} with{" "}

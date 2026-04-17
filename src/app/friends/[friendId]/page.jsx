@@ -6,36 +6,48 @@ import { FaPhone, FaTrash } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
 import { HiVideoCamera } from "react-icons/hi";
 import { useState, useEffect } from "react";
+import { useInteractions } from "@/context/InteractionsContext";
 
 const FriendDetailsPage = ({ params }) => {
   const [friendId, setFriendId] = useState(null);
   const [friend, setFriend] = useState(null);
   const [interactions, setInteractions] = useState([]);
+  const { addInteraction: addToContext } = useInteractions();
 
+  // ✅ Load friend only (no localStorage)
   useEffect(() => {
     const unwrapParams = async () => {
       const resolvedParams = await params;
-      setFriendId(resolvedParams.friendId);
-      const foundFriend = friends.find(
-        (f) => f.id === parseInt(resolvedParams.friendId),
-      );
+      const id = parseInt(resolvedParams.friendId);
+
+      setFriendId(id);
+
+      const foundFriend = friends.find((f) => f.id === id);
       setFriend(foundFriend);
+      // Interactions start empty - no localStorage loading
     };
+
     unwrapParams();
   }, [params]);
 
+  // ✅ Add interaction
   const addInteraction = (type) => {
+    if (!friend) return;
+
     const now = new Date();
+
     const timeString = now.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
+
     const dateString = now.toLocaleDateString();
 
+    // Messages as strings
     const messages = {
-      call: `📞 Called ${friend.name}`,
-      text: `💬 Texted ${friend.name}`,
-      video: `🎥 Video called ${friend.name}`,
+      call: `Called ${friend.name}`,
+      text: `Texted ${friend.name}`,
+      video: `Video called ${friend.name}`,
     };
 
     const newInteraction = {
@@ -50,23 +62,11 @@ const FriendDetailsPage = ({ params }) => {
       timestamp: now.toISOString(),
     };
 
-    // Add to local state for display on this page
-    setInteractions([newInteraction, ...interactions]);
-
-    // Save to localStorage for timeline
-    try {
-      const storedInteractions = localStorage.getItem("friendInteractions");
-      const allInteractions = storedInteractions
-        ? JSON.parse(storedInteractions)
-        : [];
-      allInteractions.push(newInteraction);
-      localStorage.setItem(
-        "friendInteractions",
-        JSON.stringify(allInteractions),
-      );
-    } catch (error) {
-      console.error("Error saving interaction:", error);
-    }
+    // Update local state
+    setInteractions((prev) => [newInteraction, ...prev]);
+    
+    // Add to global context (no localStorage)
+    addToContext(newInteraction);
   };
 
   if (!friend && friendId) {
@@ -86,7 +86,10 @@ const FriendDetailsPage = ({ params }) => {
   if (!friend) {
     return (
       <div className="w-[90%] mx-auto py-10">
-        <h1 className="text-4xl font-bold mb-4">Loading...</h1>
+        <div className="flex justify-center items-center gap-5">
+          <h1 className="text-4xl font-bold mb-4">Loading...</h1>
+          <span className="text-7xl loading loading-infinity loading-xl"></span>
+        </div>
       </div>
     );
   }
@@ -94,6 +97,7 @@ const FriendDetailsPage = ({ params }) => {
   return (
     <div className="w-[90%] mx-auto py-10">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* LEFT */}
         <div className="col-span-1 space-y-4">
           <div className="bg-white shadow rounded-xl p-4 text-center">
             <img
@@ -102,13 +106,20 @@ const FriendDetailsPage = ({ params }) => {
             />
             <h2 className="font-semibold text-lg">{friend.name}</h2>
 
-            <div className=" flex flex-col justify-center items-center gap-2.5 mt-2">
+            <div className="flex flex-col items-center gap-2.5 mt-2">
               <p
-                className={`badge text-white ${friend.status === "overdue" ? "bg-red-700" : friend.status === "almost due" ? "bg-amber-500" : friend.status === "on-track" ? "bg-green-900" : ""}`}
+                className={`badge text-white ${
+                  friend.status === "overdue"
+                    ? "bg-red-900"
+                    : friend.status === "almost due"
+                      ? "bg-amber-500"
+                      : "bg-green-900"
+                }`}
               >
                 {friend.status}
               </p>
-              <p className="badge bg-green-100 text-green-700">
+
+              <p className="badge bg-green-100 text-green-900">
                 {friend.relation}
               </p>
             </div>
@@ -117,15 +128,15 @@ const FriendDetailsPage = ({ params }) => {
           </div>
 
           <div className="bg-white shadow rounded-xl p-4 space-y-2">
-            <button className="btn w-full"> Snooze</button>
-            <button className="btn w-full"> Archive</button>
+            <button className="btn w-full">Snooze</button>
+            <button className="btn w-full">Archive</button>
             <button className="btn w-full text-red-500">
-              {" "}
               <FaTrash /> Delete
             </button>
           </div>
         </div>
 
+        {/* RIGHT */}
         <div className="col-span-3 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white shadow rounded-xl p-4 text-center">
@@ -146,49 +157,44 @@ const FriendDetailsPage = ({ params }) => {
             </div>
           </div>
 
-          <div className="bg-white shadow rounded-xl p-4">
-            <h3 className="font-semibold mb-2">Relationship Goal</h3>
-            <p className="text-gray-600">
-              Connect every <b>{friend.goal} days</b>
-            </p>
-          </div>
-
+          {/* QUICK ACTION */}
           <div className="bg-white shadow rounded-xl p-4">
             <h3 className="font-semibold mb-4">Quick Check-In</h3>
 
             <div className="grid grid-cols-3 gap-4">
               <button onClick={() => addInteraction("call")} className="btn">
-                {" "}
                 <FaPhone /> Call
               </button>
+
               <button onClick={() => addInteraction("text")} className="btn">
-                {" "}
                 <MdMessage /> Text
               </button>
+
               <button onClick={() => addInteraction("video")} className="btn">
-                {" "}
                 <HiVideoCamera /> Video
               </button>
             </div>
           </div>
 
+          {/* RECENT */}
           <div className="bg-white shadow rounded-xl p-4">
             <h3 className="font-semibold mb-4">Recent Interactions</h3>
 
             <div className="flex flex-col gap-3">
               {interactions.length === 0 ? (
                 <p className="text-gray-500 text-center py-4">
-                  No interactions yet. Start by clicking Call, Text, or Video!
+                  No interactions yet.
                 </p>
               ) : (
                 interactions.map((interaction) => (
                   <div
                     key={interaction.id}
-                    className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200"
+                    className="flex justify-between bg-gray-50 p-3 rounded-lg border"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-lg">{interaction.message}</span>
+                      {interaction.message}
                     </div>
+
                     <div className="text-right text-sm text-gray-500">
                       <p>{interaction.time}</p>
                       <p className="text-xs">{interaction.date}</p>
@@ -202,6 +208,6 @@ const FriendDetailsPage = ({ params }) => {
       </div>
     </div>
   );
-};
+}
 
 export default FriendDetailsPage;

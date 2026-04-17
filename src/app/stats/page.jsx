@@ -12,26 +12,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useInteractions } from "@/context/InteractionsContext";
 
 const StatsPage = () => {
-  const [interactions, setInteractions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [chartData, setChartData] = useState([]);
-
-  useEffect(() => {
-    // Load interactions from localStorage
-    const storedInteractions = localStorage.getItem("friendInteractions");
-    if (storedInteractions) {
-      try {
-        const parsed = JSON.parse(storedInteractions);
-        setInteractions(parsed);
-        generateChartData(parsed);
-      } catch (error) {
-        console.error("Error parsing interactions:", error);
-      }
-    }
-    setLoading(false);
-  }, []);
+  const { getInteractions } = useInteractions();
+  const interactions = getInteractions();
 
   const generateChartData = (interactionsList) => {
     const counts = {
@@ -54,6 +41,10 @@ const StatsPage = () => {
 
     setChartData(data);
   };
+
+  useEffect(() => {
+    generateChartData(interactions);
+  }, [interactions]);
 
   // Calculate statistics
   const getTotalStats = () => {
@@ -104,7 +95,7 @@ const StatsPage = () => {
   const friendStats = getFriendStats();
 
   // Colors for pie chart
-  const COLORS = ["#3b82f6", "#10b981", "#a855f7"];
+  const COLORS = ["#5210C4", "#1C6634", "#4DC472"];
 
   if (loading) {
     return (
@@ -119,29 +110,7 @@ const StatsPage = () => {
     <div className="w-[90%] mx-auto py-10 min-h-screen">
       <h1 className="text-4xl font-bold mb-8">Friendship Analytics</h1>
 
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white shadow rounded-xl p-6 text-center">
-          <p className="text-4xl font-bold text-blue-600">
-            {stats.totalInteractions}
-          </p>
-          <p className="text-gray-600 mt-2">Total Interactions</p>
-        </div>
-        <div className="bg-white shadow rounded-xl p-6 text-center">
-          <p className="text-4xl font-bold text-blue-600">{uniqueFriends}</p>
-          <p className="text-gray-600 mt-2">Friends Connected</p>
-        </div>
-        <div className="bg-white shadow rounded-xl p-6 text-center">
-          <p className="text-4xl font-bold text-green-600">{stats.callCount}</p>
-          <p className="text-gray-600 mt-2">Calls Made</p>
-        </div>
-        <div className="bg-white shadow rounded-xl p-6 text-center">
-          <p className="text-4xl font-bold text-purple-600">
-            {stats.textCount + stats.videoCount}
-          </p>
-          <p className="text-gray-600 mt-2">Other Interactions</p>
-        </div>
-      </div>
+     
 
       {/* Pie Chart Section */}
       {chartData.length > 0 && (
@@ -171,70 +140,6 @@ const StatsPage = () => {
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
-          </div>
-        </div>
-      )}
-
-      {/* Friend-wise Breakdown */}
-      {friendStats.length > 0 && (
-        <div className="bg-white shadow rounded-xl p-8">
-          <h2 className="text-2xl font-bold mb-6">
-            Friend Interactions Breakdown
-          </h2>
-          <div className="space-y-4">
-            {friendStats.map((friend, index) => (
-              <div
-                key={index}
-                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={friend.friendPicture}
-                      alt={friend.friendName}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="font-semibold text-lg">
-                        {friend.friendName}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {friend.total} total interactions
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">
-                      {friend.total}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-blue-50 rounded-lg p-3 text-center">
-                    <FaPhone className="text-blue-600 mx-auto mb-1" size={20} />
-                    <p className="text-sm font-semibold">{friend.call}</p>
-                    <p className="text-xs text-gray-600">Calls</p>
-                  </div>
-                  <div className="bg-green-50 rounded-lg p-3 text-center">
-                    <MdMessage
-                      className="text-green-600 mx-auto mb-1"
-                      size={20}
-                    />
-                    <p className="text-sm font-semibold">{friend.text}</p>
-                    <p className="text-xs text-gray-600">Texts</p>
-                  </div>
-                  <div className="bg-purple-50 rounded-lg p-3 text-center">
-                    <HiVideoCamera
-                      className="text-purple-600 mx-auto mb-1"
-                      size={20}
-                    />
-                    <p className="text-sm font-semibold">{friend.video}</p>
-                    <p className="text-xs text-gray-600">Videos</p>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       )}
