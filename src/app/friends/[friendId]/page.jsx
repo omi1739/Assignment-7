@@ -8,6 +8,7 @@ import { HiVideoCamera } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import { useInteractions } from "@/context/InteractionsContext";
 
+
 const FriendDetailsPage = ({ params }) => {
   const [friendId, setFriendId] = useState(null);
   const [friend, setFriend] = useState(null);
