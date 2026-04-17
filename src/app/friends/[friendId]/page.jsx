@@ -56,9 +56,14 @@ const FriendDetailsPage = ({ params }) => {
     // Save to localStorage for timeline
     try {
       const storedInteractions = localStorage.getItem("friendInteractions");
-      const allInteractions = storedInteractions ? JSON.parse(storedInteractions) : [];
+      const allInteractions = storedInteractions
+        ? JSON.parse(storedInteractions)
+        : [];
       allInteractions.push(newInteraction);
-      localStorage.setItem("friendInteractions", JSON.stringify(allInteractions));
+      localStorage.setItem(
+        "friendInteractions",
+        JSON.stringify(allInteractions),
+      );
     } catch (error) {
       console.error("Error saving interaction:", error);
     }

@@ -8,6 +8,7 @@ import { HiVideoCamera } from "react-icons/hi";
 const TimelinePage = () => {
   const [interactions, setInteractions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     // Load interactions from localStorage
@@ -16,7 +17,9 @@ const TimelinePage = () => {
       try {
         const parsed = JSON.parse(storedInteractions);
         // Sort by timestamp (newest first)
-        const sorted = parsed.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        const sorted = parsed.sort(
+          (a, b) => new Date(b.timestamp) - new Date(a.timestamp),
+        );
         setInteractions(sorted);
       } catch (error) {
         console.error("Error parsing interactions:", error);
@@ -51,6 +54,24 @@ const TimelinePage = () => {
     }
   };
 
+  // Filter interactions based on selected filter
+  const filteredInteractions =
+    filter === "all"
+      ? interactions
+      : interactions.filter((interaction) => interaction.type === filter);
+
+  // Get count of each interaction type
+  const getCounts = () => {
+    return {
+      all: interactions.length,
+      call: interactions.filter((i) => i.type === "call").length,
+      text: interactions.filter((i) => i.type === "text").length,
+      video: interactions.filter((i) => i.type === "video").length,
+    };
+  };
+
+  const counts = getCounts();
+
   if (loading) {
     return (
       <div className="w-[90%] mx-auto py-10">
@@ -64,15 +85,55 @@ const TimelinePage = () => {
     <div className="w-[90%] mx-auto py-10 min-h-screen">
       <h1 className="text-4xl font-bold mb-8">Timeline</h1>
 
-      {interactions.length === 0 ? (
+      {/* Filter Timeline Section */}
+      <div className="bg-white shadow rounded-xl p-6 mb-8">
+        <h3 className="font-semibold text-lg mb-4">Filter Timeline</h3>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setFilter("all")}
+            className={`btn ${
+              filter === "all" ? "btn-primary" : "btn-outline"
+            }`}
+          >
+            All ({counts.all})
+          </button>
+          <button
+            onClick={() => setFilter("call")}
+            className={`btn ${
+              filter === "call" ? "btn-primary" : "btn-outline"
+            }`}
+          >
+            <FaPhone /> Call ({counts.call})
+          </button>
+          <button
+            onClick={() => setFilter("text")}
+            className={`btn ${
+              filter === "text" ? "btn-primary" : "btn-outline"
+            }`}
+          >
+            <MdMessage /> Text ({counts.text})
+          </button>
+          <button
+            onClick={() => setFilter("video")}
+            className={`btn ${
+              filter === "video" ? "btn-primary" : "btn-outline"
+            }`}
+          >
+            <HiVideoCamera /> Video ({counts.video})
+          </button>
+        </div>
+      </div>
+
+      {filteredInteractions.length === 0 ? (
         <div className="bg-white shadow rounded-xl p-8 text-center">
           <p className="text-gray-500 text-lg">
-            No interactions yet. Start by visiting a friend's profile and clicking Call, Text, or Video!
+            No {filter !== "all" ? filter + " " : ""}interactions yet. Start by
+            visiting a friend's profile and clicking Call, Text, or Video!
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          {interactions.map((interaction) => (
+          {filteredInteractions.map((interaction) => (
             <div
               key={interaction.id}
               className="bg-white border-2 border-dashed border-blue-400 rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -89,24 +150,33 @@ const TimelinePage = () => {
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-semibold text-lg">
-                      {getInteractionLabel(interaction.type)} with {interaction.friendName}
+                      {getInteractionLabel(interaction.type)} with{" "}
+                      {interaction.friendName}
                     </span>
                   </div>
-                  <p className="text-gray-600 text-sm mb-2">{interaction.message}</p>
+                  <p className="text-gray-600 text-sm mb-2">
+                    {interaction.message}
+                  </p>
                   <div className="flex gap-4 text-xs text-gray-500">
                     <span>
-                      {new Date(interaction.timestamp).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
+                      {new Date(interaction.timestamp).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        },
+                      )}
                     </span>
                     <span>&nbsp;•&nbsp;</span>
                     <span>
-                      {new Date(interaction.timestamp).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {new Date(interaction.timestamp).toLocaleTimeString(
+                        "en-US",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
                     </span>
                   </div>
                 </div>
