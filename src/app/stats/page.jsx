@@ -46,7 +46,6 @@ const StatsPage = () => {
     generateChartData(interactions);
   }, [interactions]);
 
-  // Calculate statistics
   const getTotalStats = () => {
     const callCount = interactions.filter((i) => i.type === "call").length;
     const textCount = interactions.filter((i) => i.type === "text").length;
@@ -56,13 +55,13 @@ const StatsPage = () => {
     return { callCount, textCount, videoCount, totalInteractions };
   };
 
-  // Get unique friends
+  
   const getUniqueFriends = () => {
     const friendSet = new Set(interactions.map((i) => i.friendId));
     return friendSet.size;
   };
 
-  // Get friend interaction breakdown
+ 
   const getFriendStats = () => {
     const friendStats = {};
 
@@ -94,7 +93,7 @@ const StatsPage = () => {
   const uniqueFriends = getUniqueFriends();
   const friendStats = getFriendStats();
 
-  // Colors for pie chart
+
   const COLORS = ["#5210C4", "#1C6634", "#4DC472"];
 
   if (loading) {
@@ -110,7 +109,7 @@ const StatsPage = () => {
     <div className="w-[90%] mx-auto py-10 min-h-screen">
       <h1 className="text-4xl font-bold mb-8">Friendship Analytics</h1>
 
-      {/* Pie Chart Section */}
+     
       {chartData.length > 0 && (
         <div className="bg-white shadow rounded-xl p-8 mb-8">
           <h2 className="text-2xl font-bold mb-6">By Interaction Type</h2>
@@ -142,7 +141,7 @@ const StatsPage = () => {
         </div>
       )}
 
-      {/* Empty State */}
+      
       {interactions.length === 0 && (
         <div className="bg-white shadow rounded-xl p-8 text-center">
           <p className="text-gray-500 text-lg">
